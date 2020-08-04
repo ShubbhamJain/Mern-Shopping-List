@@ -3,6 +3,7 @@ let mongoose = require("mongoose");
 let bodyParser = require("body-parser");
 let helmet = require("helmet");
 let path = require("path");
+let favicon = require("serve-favicon");
 require("dotenv").config();
 
 let items = require("./routes/api/items");
@@ -24,15 +25,16 @@ app.use(bodyParser.json());
 
 app.use(helmet());
 
-app.get("/", (req, res) => res.status(200));
+app.get("/favicon.ico", (req, res) => res.status(200).json());
+app.use(favicon(path.join(__dirname, "client", "public", "favicon.ico")));
 app.use("/api/items", items);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 
-  // app.get("*", (req, res) => {
-  //   res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
-  // });
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+  });
 }
 
 app.listen(PORT, () => {

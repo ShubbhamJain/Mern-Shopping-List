@@ -4,11 +4,8 @@ const router = express.Router();
 
 const Item = require("../../models/ItemsModel");
 
-router.get("/favicon.ico", (req, res) => res.status(200));
-
 router.get("/", async (req, res) => {
   const items = await Item.find({}).sort({ date: -1 });
-
   res.json(items);
 });
 
