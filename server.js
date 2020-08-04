@@ -24,7 +24,7 @@ app.use(bodyParser.json());
 
 app.use(helmet());
 
-app.get("/favicon.ico", (req, res) => res.status(200));
+app.get("/", (req, res) => res.status(200));
 app.use("/api/items", items);
 
 if (process.env.NODE_ENV === "production") {
