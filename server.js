@@ -1,12 +1,8 @@
 let express = require("express");
 let mongoose = require("mongoose");
-let bodyParser = require("body-parser");
 let helmet = require("helmet");
 let path = require("path");
-let favicon = require("serve-favicon");
 require("dotenv").config();
-
-let items = require("./routes/api/items");
 
 const app = express();
 
@@ -17,17 +13,20 @@ let MONGO_URI = process.env.MONGO_URI;
 mongoose.connect(MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useCreateIndex: true,
 });
 let db = mongoose.connection;
 db.on("error", console.error.bind("MongoDB connection error"));
 
-app.use(bodyParser.json());
+app.use(express.json());
 
 app.use(helmet());
 
 app.get("/favicon.ico", (req, res) => res.status(200).json());
-app.use(favicon(path.join(__dirname, "client", "public", "favicon.ico")));
-app.use("/api/items", items);
+
+app.use("/api/items", require("./routes/api/items"));
+app.use("/api/users", require("./routes/api/users"));
+app.use("/api/auth", require("./routes/api/auth"));
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));

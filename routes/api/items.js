@@ -1,4 +1,5 @@
 const express = require("express");
+const auth = require("../../middleware/auth");
 
 const router = express.Router();
 
@@ -9,7 +10,7 @@ router.get("/", async (req, res) => {
   res.json(items);
 });
 
-router.post("/", (req, res) => {
+router.post("/", auth, (req, res) => {
   let { name } = req.body;
 
   let newItem = new Item({
@@ -21,7 +22,7 @@ router.post("/", (req, res) => {
   res.json(newItem);
 });
 
-router.delete("/:name", async (req, res) => {
+router.delete("/:name", auth, async (req, res) => {
   let { name } = req.params;
   const itemToDelete = await Item.find({ name: name });
 

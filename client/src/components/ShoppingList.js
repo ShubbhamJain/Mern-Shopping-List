@@ -6,6 +6,13 @@ import { getItems, deleteItem } from "../actions/itemActions";
 import PropTypes from "prop-types";
 
 class ShoppingList extends React.Component {
+  static propTypes = {
+    getItems: PropTypes.func.isRequired,
+    deleteItem: PropTypes.func.isRequired,
+    item: PropTypes.object.isRequired,
+    isAuthenticated: PropTypes.bool,
+  };
+
   componentDidMount() {
     this.props.getItems();
   }
@@ -19,15 +26,17 @@ class ShoppingList extends React.Component {
     const itemList = items.map(({ _id, name }) => (
       <CSSTransition key={_id} timeout={500} classNames="fade">
         <ListGroupItem>
-          <Button
-            color="danger"
-            className="remove-btn"
-            size="sm"
-            style={{ marginRight: "10px" }}
-            onClick={this.deleteItem.bind(this, name)}
-          >
-            &times;
-          </Button>
+          {this.props.isAuthenticated ? (
+            <Button
+              color="danger"
+              className="remove-btn"
+              size="sm"
+              style={{ marginRight: "10px" }}
+              onClick={this.deleteItem.bind(this, name)}
+            >
+              &times;
+            </Button>
+          ) : null}
           {name}
         </ListGroupItem>
       </CSSTransition>
@@ -42,14 +51,9 @@ class ShoppingList extends React.Component {
   }
 }
 
-ShoppingList.propTypes = {
-  getItems: PropTypes.func.isRequired,
-  deleteItem: PropTypes.func.isRequired,
-  item: PropTypes.object.isRequired,
-};
-
 const mapStateToProps = (state) => ({
   item: state.item,
+  isAuthenticated: state.auth.isAuthenticated,
 });
 
 export default connect(mapStateToProps, { getItems, deleteItem })(ShoppingList);
