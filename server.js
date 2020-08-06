@@ -2,15 +2,16 @@ let express = require("express");
 let mongoose = require("mongoose");
 let helmet = require("helmet");
 let path = require("path");
+const config = require("config");
 require("dotenv").config();
 
 const app = express();
 
 const PORT = process.env.PORT || 5000;
 
-let MONGO_URI = process.env.MONGO_URI;
+// let MONGO_URI = process.env.MONGO_URI;
 
-mongoose.connect(MONGO_URI, {
+mongoose.connect(config.get("MONGO_URI"), {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
